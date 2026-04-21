@@ -9,11 +9,10 @@ export default function TopicCard({
   onDelete,
   onVote,
   onRefresh,
-  readOnly = false
+  readOnly = false,
 }) {
   const { user } = useAuth();
-  // const isOwner = topic.user_id === currentUserId;
-  const isOwner = topic.user_id === currentUserId && !readOnly
+  const isOwner = topic.user_id === currentUserId && !readOnly;
   const isExpired =
     topic.voting_ends_at && new Date(topic.voting_ends_at) < new Date();
   const score = topic.votes?.reduce((sum, v) => sum + v.value, 0) ?? 0;
@@ -30,11 +29,6 @@ export default function TopicCard({
     retained: "Retenu",
     done: "Terminé",
   };
-  // const statusClass = {
-  //   proposed: "bg-[#a8a3e3] text-[#363b6c]",
-  //   retained: "bg-[#7c75d8] text-[#eaedfe]",
-  //   done: "bg-[#363b6c] text-[#eaedfe]",
-  // };
 
   async function toggleExpand() {
     if (!expanded) {
@@ -91,11 +85,7 @@ export default function TopicCard({
 
   function handleVote(value) {
     if (isExpired) return;
-    if (userVote?.value === value) {
-      onVote(topic.id, null, userVote.id);
-    } else {
-      onVote(topic.id, value, userVote?.id ?? null);
-    }
+    onVote(topic.id, value);
   }
 
   return (

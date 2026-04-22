@@ -6,6 +6,10 @@
   --color-violet-soft: #a8a3e3;
   --color-periwinkle: #c6c9e7;
   --color-violet-cta: #7c75d8;
+
+  --color-white: #ffffff;
+  --color-indigo-light: #4a5098;  
+  --color-danger: #e53e3e;        
 }
 
 /* * {
@@ -15,6 +19,6 @@
 } */
 
 body {
-  background-color: #eaedfe;
+  background-color: #dde0f5;
   font-family: 'Inter', sans-serif;
 }

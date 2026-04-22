@@ -35,15 +35,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-indigo-deep flex justify-center items-center">
-      <div className="bg-lavender rounded-2xl p-8 w-full max-w-100">
-        <h1 className="text-indigo-deep text-2xl font-semibold mb-1">Sync</h1>
-        <p className="text-violet-cta text-sm mb-6">Crée ton compte</p>
+  <div className="min-h-screen bg-indigo-deep flex justify-center items-center px-4">
+    <div className="w-full max-w-sm">
 
+      <div className="text-center mb-8">
+        <h1 className="text-lavender text-3xl font-bold tracking-tight">Sync</h1>
+        <p className="text-violet-soft text-sm mt-1">Crée ton compte</p>
+      </div>
+
+      <div className="bg-white rounded-2xl p-6 shadow-sm">
         {error && (
-          <p className="text-[#e53e3e] text-[13px] mb-4 bg-[#fff5f5] py-2 px-3 rounded-lg">
-            {error}
-          </p>
+          <p className="text-red-500 text-xs mb-4 bg-red-50 py-2 px-3 rounded-lg">{error}</p>
         )}
 
         <form onSubmit={handleRegister} className="flex flex-col gap-3">
@@ -51,41 +53,41 @@ export default function RegisterPage() {
             type="text"
             placeholder="Nom d'utilisateur"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={e => setUsername(e.target.value)}
             required
-            className="py-2.5 px-3.5 rounded-lg border border-periwinkle text-sm outline-none bg-white"
+            className="py-2.5 px-3.5 rounded-xl border border-periwinkle text-sm outline-none bg-lavender focus:border-violet-cta transition-colors"
           />
           <input
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             required
-            className="py-2.5 px-3.5 rounded-lg border border-periwinkle text-sm outline-none bg-white"
+            className="py-2.5 px-3.5 rounded-xl border border-periwinkle text-sm outline-none bg-lavender focus:border-violet-cta transition-colors"
           />
           <input
             type="password"
             placeholder="Mot de passe"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             required
-            className="py-2.5 px-3.5 rounded-lg border border-periwinkle text-sm outline-none bg-white"
+            className="py-2.5 px-3.5 rounded-xl border border-periwinkle text-sm outline-none bg-lavender focus:border-violet-cta transition-colors"
           />
           <button
             type="submit"
-            className="p-2.5 rounded-lg bg-violet-cta text-white text-sm font-medium cursor-pointer"
+            className="p-2.5 rounded-xl bg-violet-cta text-white text-sm font-medium cursor-pointer mt-1"
           >
             S'inscrire
           </button>
         </form>
 
-        <p className="text-sm text-indigo-deep mt-4 text-center">
-          Déjà un compte ?{" "}
-          <Link to="/login" className="text-violet-cta font-medium">
-            Se connecter
-          </Link>
+        <p className="text-xs text-violet-soft mt-4 text-center">
+          Déjà un compte ?{' '}
+          <Link to="/login" className="text-violet-cta font-medium">Se connecter</Link>
         </p>
       </div>
+
     </div>
-  );
+  </div>
+)
 }

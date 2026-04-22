@@ -4,6 +4,7 @@ import RegisterPage from './pages/RegisterPage'
 import SpacesPage from './pages/SpacesPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import SpacePage from './pages/SpacePage'
+import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <SpacePage />
         </ProtectedRoute>
       } />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }

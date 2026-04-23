@@ -73,5 +73,5 @@ VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxxxx
 
 ## Auteur
 
-**Ando** — Responsable Technologique  
+**Ando** — Developpeur Web  
 [Portfolio](https://andorajohna.vercel.app) · [GitHub](https://github.com/AndoJo001) · [LinkedIn](https://www.linkedin.com/in/ando-rajohna)

@@ -4,11 +4,12 @@ import { useAuth } from "../context/AuthContext";
 import NotificationBell from "./NotificationBell";
 import Footer from "./Footer";
 import { User } from "lucide-react";
+import logoImg from "../assets/logo_recadre.png"
 
 export default function Layout({
   children,
   showBack = false,
-  title = "Sync",
+  title = null,
   subtitle = null,
 }) {
   const { user, profile } = useAuth();
@@ -35,9 +36,14 @@ export default function Layout({
             </>
           )}
           <div>
-            <h1 className="text-lavender font-semibold text-xl leading-none">
+            {title ? (
+              <h1 className="text-lavender font-semibold text-xl leading-none">
               {title}
             </h1>
+            ) : (
+              <img src={logoImg} className="h-12" />
+            )}
+
             {subtitle && (
               <p className="text-violet-soft text-xs mt-0.5">{subtitle}</p>
             )}

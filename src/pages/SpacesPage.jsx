@@ -44,7 +44,7 @@ export default function SpacesPage() {
   }, []);
 
   return (
-    <Layout title="Sync">
+    <Layout>
       <main className="max-w-2xl mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-indigo-deep font-semibold text-lg">

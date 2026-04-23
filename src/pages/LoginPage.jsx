@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { supabase } from '../supabaseClient'
 import { useNavigate, Link } from 'react-router-dom'
+import logoImg from "../assets/logo_recadre.png"
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -24,8 +25,9 @@ export default function LoginPage() {
     <div className="w-full max-w-sm">
 
       {/* Logo */}
-      <div className="text-center mb-8">
-        <h1 className="text-lavender text-3xl font-bold tracking-tight">Sync</h1>
+      <div className="text-center mb-6">
+        {/* <h1 className="text-lavender text-3xl font-bold tracking-tight">Sync</h1> */}
+        <img src={logoImg} className="w-40 mx-auto" />
         <p className="text-violet-soft text-sm mt-1">Connecte-toi à ton espace</p>
       </div>
 

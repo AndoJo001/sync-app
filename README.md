@@ -1,16 +1,77 @@
-# React + Vite
+# Sync — Organisez, votez, planifiez
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application collaborative de planning par votes. Les utilisateurs proposent des topics ou des événements, votent pour leurs préférés, et les résultats génèrent automatiquement un planning trié par popularité.
 
-Currently, two official plugins are available:
+🔗 **Demo live** : [sync-organize.vercel.app](https://sync-organize.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Fonctionnalités
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Espaces privés** — créez un espace et invitez vos collaborateurs via un code d'accès unique
+- **Topics** — proposez des sujets ou événements avec date et description
+- **Votes** — upvote / downvote, un vote par utilisateur par topic, fermeture automatique des votes
+- **Planning généré** — vue triée par score de votes avec filtres par statut
+- **Commentaires** — échangez sur chaque topic
+- **Notifications in-app** — alertes de votes et rappels d'événements approchants
+- **Temps réel** — les scores se mettent à jour instantanément via Supabase Realtime
+- **Authentification** — inscription, connexion, gestion du profil
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Stack technique
+
+| Couche | Technologie |
+|--------|-------------|
+| Frontend | React 18, Vite |
+| Styling | Tailwind CSS v4 |
+| Backend | Supabase (PostgreSQL + Auth + Realtime) |
+| Déploiement | Vercel |
+
+---
+
+## Architecture BDD
+
+profiles          — utilisateurs (lié à Supabase Auth)
+spaces            — espaces de travail
+space_members     — relation membres ↔ espaces
+topics            — sujets proposés dans un espace
+votes             — votes par utilisateur par topic
+comments          — commentaires sur les topics
+notifications     — notifications in-app
+
+---
+
+## Lancer le projet en local
+
+```bash
+# Cloner le repo
+git clone https://github.com/AndoJo001/sync-app.git
+cd sync-app
+
+# Installer les dépendances
+npm install
+
+# Configurer les variables d'environnement
+cp .env.example .env
+# Remplis VITE_SUPABASE_URL et VITE_SUPABASE_PUBLISHABLE_KEY
+
+# Lancer le serveur de développement
+npm run dev
+```
+
+---
+
+## Variables d'environnement
+
+```env
+VITE_SUPABASE_URL=https://xxxxx.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxxxx
+```
+
+---
+
+## Auteur
+
+**Ando** — Responsable Technologique  
+[Portfolio](https://andorajohna.vercel.app) · [GitHub](https://github.com/AndoJo001) · [LinkedIn](https://www.linkedin.com/in/ando-rajohna)

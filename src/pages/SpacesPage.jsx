@@ -6,6 +6,7 @@ import CreateSpaceModal from "../components/CreateSpaceModal";
 import JoinSpaceModal from "../components/JoinSpaceModal";
 import NotificationBell from "../components/NotificationBell";
 import Layout from "../components/Layout";
+import { useLoader } from "../context/LoadingContext";
 
 export default function SpacesPage() {
   const { user } = useAuth();
@@ -13,13 +14,16 @@ export default function SpacesPage() {
   const [spaces, setSpaces] = useState([]);
   const [showCreate, setShowCreate] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
+  const { showLoader, hideLoader } = useLoader()
 
   async function fetchSpaces() {
+    showLoader()
     const { data } = await supabase
       .from("space_members")
       .select("space_id, spaces(id, name, owner_id)")
       .eq("user_id", user.id);
     if (data) setSpaces(data.map((d) => d.spaces));
+    hideLoader()
   }
 
   useEffect(() => {

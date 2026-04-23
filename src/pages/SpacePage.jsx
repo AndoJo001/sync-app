@@ -8,6 +8,7 @@ import CreateTopicModal from "../components/CreateTopicModal";
 // import NotificationBell from "../components/NotificationBell";
 import Layout from "../components/Layout";
 import Toast from "../components/Toast";
+import { useLoader } from "../context/LoadingContext";
 
 export default function SpacePage() {
   const { spaceId } = useParams();
@@ -20,6 +21,7 @@ export default function SpacePage() {
   const [activeTab, setActiveTab] = useState("topics");
   const [filterStatus, setFilterStatus] = useState("all");
   const [toast, setToast] = useState(null);
+  const { showLoader, hideLoader } = useLoader();
 
   function showToast(message, type = "success") {
     setToast({ message, type });
@@ -35,6 +37,7 @@ export default function SpacePage() {
   }
 
   async function fetchTopics() {
+    showLoader();
     const { data } = await supabase
       .from("topics")
       .select("*, profiles(username), votes(id, value, user_id)")
@@ -50,9 +53,11 @@ export default function SpacePage() {
       });
       setUserVotes(votesMap);
     }
+    hideLoader();
   }
 
   async function handleVote(topicId, value) {
+    showLoader();
     const { data: existingVotes } = await supabase
       .from("votes")
       .select("id, value")
@@ -91,11 +96,14 @@ export default function SpacePage() {
     }
 
     await fetchTopics();
+    hideLoader();
+    showToast("Vote enregistré");
   }
 
   async function checkDateReminders() {
     const now = new Date();
     const in48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+    const today = new Date().toISOString().split('T')[0]
 
     const { data } = await supabase
       .from("topics")
@@ -108,11 +116,22 @@ export default function SpacePage() {
     if (!data || data.length === 0) return;
 
     for (const topic of data) {
+      // const { data: existing } = await supabase
+      //   .from("notifications")
+      //   .select("id")
+      //   .eq("user_id", user.id)
+      //   .ilike("message", `%rappel%${topic.title}%`)
+      //   .limit(1);
+
       const { data: existing } = await supabase
         .from("notifications")
         .select("id")
         .eq("user_id", user.id)
-        .ilike("message", `%rappel%${topic.title}%`)
+        .eq(
+          "message",
+          `Rappel : l'événement "${topic.title}" approche dans moins de 48h`,
+        )
+        .gte("created_at", `${today}T00:00:00`)
         .limit(1);
 
       if (!existing || existing.length === 0) {
@@ -156,7 +175,7 @@ export default function SpacePage() {
       subtitle={space ? `Code : ${space.access_code}` : null}
     >
       {/* Onglets */}
-      <div className="bg-white border-b border-periwinkle px-6 flex gap-2">
+      <div className="bg-white border-b border-periwinkle px-6 flex gap-2 fixed w-full">
         <button
           className={tabClass("topics")}
           onClick={() => setActiveTab("topics")}
@@ -174,7 +193,7 @@ export default function SpacePage() {
       <main className="max-w-3xl mx-auto px-4 py-8">
         {activeTab === "topics" && (
           <>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-6 mt-4">
               <h2 className="text-indigo-deep font-semibold text-lg">Topics</h2>
               <button
                 onClick={() => setShowCreate(true)}
@@ -213,7 +232,7 @@ export default function SpacePage() {
 
         {activeTab === "planning" && (
           <>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-6 mt-4">
               <h2 className="text-indigo-deep font-semibold text-lg">
                 Planning
               </h2>
@@ -276,7 +295,10 @@ export default function SpacePage() {
         <CreateTopicModal
           spaceId={spaceId}
           onClose={() => setShowCreate(false)}
-          onCreated={() => { fetchTopics(); showToast('Topic proposé avec succès') }}
+          onCreated={() => {
+            fetchTopics();
+            showToast("Topic proposé avec succès");
+          }}
         />
       )}
 

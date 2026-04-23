@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import CreateSpaceModal from "../components/CreateSpaceModal";
 import JoinSpaceModal from "../components/JoinSpaceModal";
 import NotificationBell from "../components/NotificationBell";
+import ConfirmModal from "../components/ConfirmModal"
 import Layout from "../components/Layout";
 import { useLoader } from "../context/LoadingContext";
 
@@ -14,16 +15,28 @@ export default function SpacesPage() {
   const [spaces, setSpaces] = useState([]);
   const [showCreate, setShowCreate] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
-  const { showLoader, hideLoader } = useLoader()
+  const { showLoader, hideLoader } = useLoader();
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
   async function fetchSpaces() {
-    showLoader()
+    showLoader();
     const { data } = await supabase
       .from("space_members")
       .select("space_id, spaces(id, name, owner_id)")
       .eq("user_id", user.id);
     if (data) setSpaces(data.map((d) => d.spaces));
-    hideLoader()
+    hideLoader();
+  }
+
+  // async function handleDeleteSpace(e, spaceId) {
+  //   e.stopPropagation();
+  //   await supabase.from("spaces").delete().eq("id", spaceId);
+  //   fetchSpaces();
+  // }
+
+  async function handleDeleteSpace(spaceId) {
+    await supabase.from("spaces").delete().eq("id", spaceId);
+    fetchSpaces();
   }
 
   useEffect(() => {
@@ -55,7 +68,9 @@ export default function SpacesPage() {
 
         {spaces.length === 0 ? (
           <div className="text-center py-16 text-violet-soft">
-            <p className="text-sm">Aucun espace pour l'instant ou veuillez patientez</p>
+            <p className="text-sm">
+              Aucun espace pour l'instant ou veuillez patientez
+            </p>
             <p className="text-xs mt-2">
               Crée un espace ou rejoins-en un avec un code
             </p>
@@ -84,9 +99,25 @@ export default function SpacesPage() {
                     </p>
                   </div>
                 </div>
-                <span className="text-periwinkle group-hover:text-violet-cta transition-colors text-lg">
+                {/* <span className="text-periwinkle group-hover:text-violet-cta transition-colors text-lg">
                   →
-                </span>
+                </span> */}
+                <div className="flex items-center gap-3">
+                  {space.owner_id === user.id && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConfirmDelete(space.id);
+                      }}
+                      className="text-sm text-periwinkle hover:text-red-400 transition-colors cursor-pointer"
+                    >
+                      Supprimer
+                    </button>
+                  )}
+                  <span className="text-periwinkle group-hover:text-violet-cta transition-colors text-sm">
+                    →
+                  </span>
+                </div>
               </div>
             ))}
           </div>
@@ -103,6 +134,16 @@ export default function SpacesPage() {
         <JoinSpaceModal
           onClose={() => setShowJoin(false)}
           onJoined={fetchSpaces}
+        />
+      )}
+      {confirmDelete && (
+        <ConfirmModal
+          message="Supprimer cet espace ? Tous les topics et votes seront perdus."
+          onConfirm={() => {
+            handleDeleteSpace(confirmDelete);
+            setConfirmDelete(null);
+          }}
+          onCancel={() => setConfirmDelete(null)}
         />
       )}
     </Layout>

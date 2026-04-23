@@ -1,25 +1,32 @@
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
-import { useAuth } from '../context/AuthContext'
-import NotificationBell from './NotificationBell'
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
+import { useAuth } from "../context/AuthContext";
+import NotificationBell from "./NotificationBell";
+import Footer from "./Footer";
+import { User } from "lucide-react";
 
-export default function Layout({ children, showBack = false, title = 'Sync', subtitle = null }) {
-  const { user } = useAuth()
-  const navigate = useNavigate()
+export default function Layout({
+  children,
+  showBack = false,
+  title = "Sync",
+  subtitle = null,
+}) {
+  const { user, profile } = useAuth();
+  const navigate = useNavigate();
 
   async function handleLogout() {
-    await supabase.auth.signOut()
-    navigate('/login')
+    await supabase.auth.signOut();
+    navigate("/login");
   }
 
   return (
-    <div className="min-h-screen">
-      <header className="bg-indigo-deep px-6 py-4 flex justify-between items-center sticky top-0 z-40">
+    <div className="min-h-screen flex flex-col">
+      <header className="bg-indigo-deep px-10 py-5 flex justify-between items-center sticky top-0 z-40">
         <div className="flex items-center gap-3">
           {showBack && (
             <>
               <button
-                onClick={() => navigate('/')}
+                onClick={() => navigate("/")}
                 className="text-periwinkle text-sm cursor-pointer hover:text-lavender transition-colors"
               >
                 ← Espaces
@@ -28,7 +35,7 @@ export default function Layout({ children, showBack = false, title = 'Sync', sub
             </>
           )}
           <div>
-            <h1 className="text-lavender font-semibold text-base leading-none">
+            <h1 className="text-lavender font-semibold text-xl leading-none">
               {title}
             </h1>
             {subtitle && (
@@ -39,7 +46,13 @@ export default function Layout({ children, showBack = false, title = 'Sync', sub
 
         <div className="flex items-center gap-3">
           <NotificationBell />
-          <span className="text-violet-soft text-xs hidden sm:block">{user?.email}</span>
+          <button
+            onClick={() => navigate("/profile")}
+            className="hidden sm:flex items-center gap-1.5 text-violet-soft text-xs hover:text-lavender transition-colors cursor-pointer"
+          >
+            <User size={13} />
+            <span>{profile?.username ?? user?.email}</span>
+          </button>
           <button
             onClick={handleLogout}
             className="px-3 py-1.5 text-xs text-periwinkle border border-violet-soft/30 rounded-lg cursor-pointer hover:text-lavender transition-colors"
@@ -49,7 +62,8 @@ export default function Layout({ children, showBack = false, title = 'Sync', sub
         </div>
       </header>
 
-      {children}
+      <div className="flex-1">{children}</div>
+      <Footer />
     </div>
-  )
+  );
 }

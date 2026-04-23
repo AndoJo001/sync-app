@@ -51,7 +51,7 @@ export default function SpacesPage() {
 
         {spaces.length === 0 ? (
           <div className="text-center py-16 text-violet-soft">
-            <p className="text-sm">Aucun espace pour l'instant</p>
+            <p className="text-sm">Aucun espace pour l'instant ou veuillez patientez</p>
             <p className="text-xs mt-2">
               Crée un espace ou rejoins-en un avec un code
             </p>

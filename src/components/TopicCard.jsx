@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
 import { useAuth } from "../context/AuthContext";
+import ConfirmModal from "./ConfirmModal";
 
 const STATUS_CONFIG = {
   proposed: { label: "Proposé", bg: "#a8a3e3", color: "#363b6c" },
@@ -29,6 +30,9 @@ export default function TopicCard({
   const [editingDate, setEditingDate] = useState(false);
   const [newDate, setNewDate] = useState(topic.event_date?.split("T")[0] ?? "");
   const [showStatusMenu, setShowStatusMenu] = useState(false);
+
+  const [confirmDeleteTopic, setConfirmDeleteTopic] = useState(false);
+  const [confirmDeleteComment, setConfirmDeleteComment] = useState(null);
 
   async function toggleExpand() {
     if (!expanded) {
@@ -92,7 +96,10 @@ export default function TopicCard({
   return (
     // <div className="bg-white border border-periwinkle rounded-2xl shadow-sm overflow-hidden">
     <div className="bg-white rounded-2xl overflow-hidden border border-periwinkle shadow-sm hover:border-violet-soft transition-colors flex">
-      <div className="w-1 shrink-0 rounded-l-2xl" style={{ background: currentStatus.bg }} />
+      <div
+        className="w-1 shrink-0 rounded-l-2xl"
+        style={{ background: currentStatus.bg }}
+      />
 
       <div className="flex-1 min-w-0">
         <div className="p-5 flex flex-col gap-4">
@@ -255,8 +262,8 @@ export default function TopicCard({
               </button>
               {isOwner && (
                 <button
-                  onClick={() => onDelete(topic.id)}
-                  className="text-xs text-periwinkle hover:text-red-400 cursor-pointer transition-colors"
+                  onClick={() => setConfirmDeleteTopic(true)}
+                  className="text-xs text-violet-soft hover:text-danger cursor-pointer transition-colors flex items-center gap-1"
                 >
                   Supprimer
                 </button>
@@ -278,7 +285,7 @@ export default function TopicCard({
               {comments.map((comment) => (
                 <div
                   key={comment.id}
-                  className="flex items-start justify-between gap-2"
+                  className="flex items-center justify-between gap-2"
                 >
                   <div className="flex items-start gap-2">
                     <div
@@ -298,8 +305,8 @@ export default function TopicCard({
                   </div>
                   {comment.user_id === user.id && (
                     <button
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className="text-xs flex items-center text-periwinkle hover:text-red-400 cursor-pointer shrink-0 transition-colors"
+                      onClick={() => setConfirmDeleteComment(comment.id)}
+                      className="text-xs flex justify-center items-center text-periwinkle hover:text-red-400 cursor-pointer shrink-0 transition-colors"
                     >
                       X
                     </button>
@@ -325,6 +332,27 @@ export default function TopicCard({
             </button>
           </form>
         </div>
+      )}
+      {confirmDeleteTopic && (
+        <ConfirmModal
+          message="Supprimer ce topic ? Cette action est irréversible."
+          onConfirm={() => {
+            onDelete(topic.id);
+            setConfirmDeleteTopic(false);
+          }}
+          onCancel={() => setConfirmDeleteTopic(false)}
+        />
+      )}
+
+      {confirmDeleteComment && (
+        <ConfirmModal
+          message="Supprimer ce commentaire ?"
+          onConfirm={() => {
+            handleDeleteComment(confirmDeleteComment);
+            setConfirmDeleteComment(null);
+          }}
+          onCancel={() => setConfirmDeleteComment(null)}
+        />
       )}
     </div>
   );
